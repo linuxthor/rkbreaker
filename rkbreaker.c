@@ -71,7 +71,7 @@ unsigned long *kprobe_find_sct(void)
 
 static int fake_init_function(void)
 {
-    return -84;
+    return -13;
 }
 
 // check .text section of incoming LKM for suspicious instruction sequence 
