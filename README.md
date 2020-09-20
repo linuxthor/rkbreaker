@@ -8,17 +8,19 @@ The most alarming statement is that __**"37.3% of detection tests didn't provide
 
 Rootkit breaker is an experimental **proof of concept** LKM showing the use of kprobes to try and detect/prevent certain types of **known** rootkits by a few different techniques.   
 
-Rootkit breaker can prevent some **known** rootkits from loading and can stop some **known** and **unknown** rootkits (using **known** techniques) from functioning correctly while still allowing other LKM to operate. 
+Rootkit breaker can prevent some **known** rootkits from loading and can stop some **known** and **unknown** rootkits (using **known** techniques) from functioning correctly while still (hopefully) allowing other LKM to operate. 
+
+Rootkit breaker does not try in any way to guard itself against malware that attempts to circumvent or bypass it. 
 
 Rootkit breaker is **proof of concept** (see N.A.S.T.Y warning below!) Use it to study anti-rootkit. Don't run it on your important stuff and get sad when something bad happens!    
 
 ### Identifying known bad LKM using signatures (first line defence)   
 
-Each loadable kernel module being inserted into the kernel is checked for patterns in the code or data associated with **known** rootkits. This area of the code currently has a _small number or signatures_ associated with some of the more prominent Linux LKM rootkits. If a signature is found then the module is prevented from loading by overwriting it's init function pointer in the struct module with one of our own.   
+Each loadable kernel module being inserted into the kernel is checked for patterns in the code or data sections associated with **known** rootkits. This area of the program currently has a _small number or signatures_ associated with some of the more prominent Linux LKM rootkits (enough to show how it could work - not intending to cover every rootkit ever) If a signature is found then the module is prevented from loading by overwriting it's init function pointer in the struct module with pointer to a function that returns -EACCES  
 
 ### Gatekeeping certain functions (second line defence)     
 
-Some kernel functions are abused time and again because rootkit developers are **developers** and all developers like to reuse some working code! :) So you see a bunch of stuff like kallsyms_lookup_name("sys_call_table") in lots of rootkits but "not so much" in other softwares.. Kprobes are used to check some functions for suspect arguments and we can prevent the call.. however.. this poses a problem. Rootkit developers (like ALL kernel developers.. ;) sometimes forget to check return values and might go ahead and dereference a NULL pointer you give them so to protect against this we try and steer them into an area of pre-allocated memory to do things like overwrite a fake syscall table etc. 
+Some kernel functions are abused time and again because rootkit developers are **developers** and all developers like to reuse some working code! :) So you see a bunch of stuff like kallsyms_lookup_name("sys_call_table") in lots of rootkits but "not so much" in other software.. Kprobes are used to check some functions for suspect arguments and we can prevent the call.. however.. this poses a problem.. rootkit developers (like ALL kernel developers.. ;) sometimes forget to check return values and might go ahead and dereference a NULL pointer you give them and blow up in the middle of YOUR running kernel! To protect against this we try and steer them into an area of pre-allocated memory to do the things like overwrite a pointer in (fake) syscall table etc. 
 
 ### Userland global preload prevention (tertiary defence)   
 
