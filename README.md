@@ -20,4 +20,10 @@ Some kernel functions are abused time and again because rootkit developers are *
 
 The userland 'LD_PRELOAD' rootkits often insert an entry into the file /etc/ld.so.preload to be loaded into all processes (even privileged processes) As this feature is only used occasionally for debugging so I think we can feel free to disable it in most case! The dynamic linker/loader first checks for /etc/ld.so.preload with a sys_access call before opening the file so we can arrange for that call to fail. There are rootkits that patch the linker/loader to check for a different path so more would need to be done in the real world.   
 
+## Important! N.A.S.T.Y warning! 
+
+_"..(N)ot (a) (s)ecurity (t)ool (y)eah?.."_
+
+This is a proof of concept to show a couple of different techniques. If you want to fork it and make it a full tool then please go ahead! I'd be sad to learn you're using it on your important systems as-is! 
+
 
