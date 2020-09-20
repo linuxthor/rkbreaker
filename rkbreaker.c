@@ -280,8 +280,8 @@ static int sysaccess_pre_handler(struct kprobe *p, struct pt_regs *regs)
 
     if(regs->di != 0)
     {   
-        fnam = kmalloc(32, GFP_KERNEL);
-        if(copy_from_user(fnam, (void *)regs->di, 24) != 0)
+        fnam = kmalloc(PATH_MAX, GFP_KERNEL);
+        if(copy_from_user(fnam, (void *)regs->di, PATH_MAX) != 0)
         {
             if(strcmp((char *)fnam, "/etc/ld.so.preload") == 0)
             {   
@@ -299,8 +299,8 @@ static int faccessat_pre_handler(struct kprobe *p, struct pt_regs *regs)
 
     if(regs->si != 0)
     {   
-        fnam = kmalloc(32, GFP_KERNEL);
-        if(copy_from_user(fnam, (void *)regs->si, 24) != 0)
+        fnam = kmalloc(PATH_MAX, GFP_KERNEL);
+        if(copy_from_user(fnam, (void *)regs->si, PATH_MAX) != 0)
         {
             if(strcmp((char *)fnam, "/etc/ld.so.preload") == 0)
             {   
