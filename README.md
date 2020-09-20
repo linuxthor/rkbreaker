@@ -24,10 +24,6 @@ Each loadable kernel module being inserted into the kernel is checked for patter
 
 Some kernel functions are abused time and again because rootkit developers are **developers** and all developers like to reuse some working code! :) So you see a bunch of stuff like kallsyms_lookup_name("sys_call_table") in lots of rootkits but "not so much" in other software.. Kprobes are used to check some functions for suspect arguments and we can prevent the call.. however.. this poses a problem.. rootkit developers (like ALL kernel developers.. ;) sometimes forget to check return values and might go ahead and dereference a NULL pointer you give them and blow up in the middle of YOUR running kernel! To protect against this we try and steer them into an area of pre-allocated memory to do the things like overwrite a pointer in (fake) syscall table etc. 
 
-### Userland global preload prevention (tertiary defence)   
-
-The userland 'LD_PRELOAD' rootkits often insert an entry into the file /etc/ld.so.preload to be loaded into all processes (even privileged processes) As this feature is only used occasionally for debugging so I think we can feel free to disable it in most case! The dynamic linker/loader first checks for /etc/ld.so.preload with a sys_access call before opening the file so we can arrange for that call to fail. There are rootkits that patch the linker/loader to check for a different path so more would need to be done in the real world.   
-
 ## Important! N.A.S.T.Y warning! 
 
 _"..**N**ot **a** **s**ecurity **t**ool **y**eah?.."_
