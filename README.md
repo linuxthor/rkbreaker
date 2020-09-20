@@ -14,7 +14,7 @@ Rootkit breaker does not try in any way to guard itself against malware that att
 
 Rootkit breaker tries to stop rootkits from being loaded or from functioning properly - it is **not a rootkit detection tool** 
 
-Rootkit breaker is **proof of concept** (see N.A.S.T.Y warning below!) Use it to study anti-rootkit. Don't run it on your important stuff and get sad when something bad happens!    
+Rootkit breaker is **proof of concept** (see N.A.S.T.Y warning below!) Use it to play and study anti-rootkit. Don't run it on your important stuff in production and get sad when something bad happens!    
 
 ### Identifying known bad LKM using signatures (first line defence)   
 
