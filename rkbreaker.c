@@ -74,8 +74,6 @@ static int fake_init_function(void)
     return -84;
 }
 
-// check .text section of incoming LKM for suspicious instruction sequence 
-//
 static int do_init_module_pre_handler(struct kprobe *p, struct pt_regs *regs)
 {
     int x; 
