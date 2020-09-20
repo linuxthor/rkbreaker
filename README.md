@@ -6,7 +6,7 @@ The paper "Effectiveness of Linux Rootkit Detection Tools" by Juho Junnila (http
 
 The most alarming statement is that __**"37.3% of detection tests didn't provide any indication of a rootkit infection"**__      
 
-Rootkit breaker is an experimental **proof of concept** tool showing the use of kprobes to try and detect/prevent certain types of **known** rootkits by a few different techniques.   
+Rootkit breaker is an experimental **proof of concept** LKM showing the use of kprobes to try and detect/prevent certain types of **known** rootkits by a few different techniques.   
 
 ### Identifying known bad LKM using signatures (first line defence)   
 
