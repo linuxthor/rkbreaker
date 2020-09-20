@@ -32,6 +32,6 @@ The userland 'LD_PRELOAD' rootkits often insert an entry into the file /etc/ld.s
 
 _"..**N**ot **a** **s**ecurity **t**ool **y**eah?.."_
 
-This is a proof of concept to show a couple of different techniques. If you want to fork it and make it a full tool then please go ahead! I'd be sad to learn you're using it on your important systems as-is! 
+This is a proof of concept to show a couple of different techniques. If you want to fork it and make it a full tool then please go ahead! **I'd be sad to learn you're using it on your important systems as-is!** 
 
 
