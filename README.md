@@ -2,11 +2,15 @@
 
 ![](rootkit-breaker-logo.png)    
 
-The paper "Effectiveness of Linux Rootkit Detection Tools" by Juho Junnila (http://jultika.oulu.fi/files/nbnfioulu-202004201485.pdf) makes it clear that current Linux rootkit detection tools (except perhaps LKRG which has a bit of a different design motivation) don't do a great job!    
+The paper "Effectiveness of Linux Rootkit Detection Tools" by Juho Junnila (http://jultika.oulu.fi/files/nbnfioulu-202004201485.pdf) makes it clear that current Linux rootkit detection tools (except perhaps LKRG) don't do a great job!    
 
 The most alarming statement is that __**"37.3% of detection tests didn't provide any indication of a rootkit infection"**__      
 
 Rootkit breaker is an experimental **proof of concept** LKM showing the use of kprobes to try and detect/prevent certain types of **known** rootkits by a few different techniques.   
+
+Rootkit breaker can prevent some **known** rootkits from loading and can stop some **known** and **unknown** rootkits (using **known** techniques) from functioning correctly while still allowing other LKM to operate. 
+
+Rootkit breaker is **proof of concept** (see N.A.S.T.Y warning below!) Use it to study anti-rootkit. Don't run it on your important stuff and get sad when something bad happens!    
 
 ### Identifying known bad LKM using signatures (first line defence)   
 
