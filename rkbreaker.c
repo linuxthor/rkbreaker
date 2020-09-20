@@ -71,7 +71,7 @@ unsigned long *kprobe_find_sct(void)
 
 static int fake_init_function(void)
 {
-    return -13;
+    return -84;
 }
 
 // check .text section of incoming LKM for suspicious instruction sequence 
@@ -259,55 +259,6 @@ static int lookupad_pre_handler(struct kprobe *p, struct pt_regs *regs)
     return 0;
 }
 
-// global userspace preload prevention.. (rather than LD_PRELOAD environment variable you 
-// can specify some shared objects in /etc/ld.so.preload to be loaded into all processes)
-//
-// this feature is abused to inject some userland rootkits 
-// 
-// glibc checks for /etc/ld.so.preload first with sys_access() before trying sys_open() 
-// so we can intercept this and cause it to return -1 EINVAL..
-//
-// a couple of rootkits directly patch ld-linux.so to change that path so something 
-// (inotify? file_operations overwrite?) would be needed to guard that  
-//
-// now.. sadly you might either need to drop anchor on sys_access or 
-// do_faccessat.. this program tries to accomodate both (version specific) 
-// scenarios 
-//
-static int sysaccess_pre_handler(struct kprobe *p, struct pt_regs *regs)
-{
-    unsigned long *fnam;
-
-    if(regs->di != 0)
-    {   
-        fnam = kmalloc(PATH_MAX, GFP_KERNEL);
-        copy_from_user(fnam, (void *)regs->di, PATH_MAX); 
-        if(strcmp((char *)fnam, "/etc/ld.so.preload") == 0)
-        {   
-            regs->si = 90210;
-        }
-        kfree(fnam);
-    }
-    return 0;
-}
-
-static int faccessat_pre_handler(struct kprobe *p, struct pt_regs *regs)
-{
-    unsigned long *fnam;
-
-    if(regs->si != 0)
-    {   
-        fnam = kmalloc(PATH_MAX, GFP_KERNEL);
-        copy_from_user(fnam, (void *)regs->si, PATH_MAX);
-        if(strcmp((char *)fnam, "/etc/ld.so.preload") == 0)
-        {   
-            regs->dx = 90210;
-        }
-        kfree(fnam);
-    }
-    return 0;
-}
-
 static struct kprobe do_init_module_kp = {
     .pre_handler         = do_init_module_pre_handler
 };
@@ -328,10 +279,6 @@ static struct kprobe lookup_address_kp = {
     .pre_handler         = lookupad_pre_handler
 };
 
-static struct kprobe sys_access_kp = {
-    .pre_handler  = sysaccess_pre_handler
-};
-
 int init_module(void)
 {
     int ret;
@@ -345,7 +292,6 @@ int init_module(void)
     kallsyms_kp.symbol_name                  = "kallsyms_lookup_name";
     kallsyms_on_each_symbol_kp.symbol_name   = "kallsyms_on_each_symbol";
     lookup_address_kp.symbol_name            = "lookup_address";  
-    sys_access_kp.symbol_name                = "sys_access"; 
  
     if((ret = register_kprobe(&do_init_module_kp)) < 0)    
     {
@@ -372,20 +318,6 @@ int init_module(void)
         pr_err("rkb: lookup_address register_kprobe returned %d\n", ret);
         return ret;
     }
-    if((ret = register_kprobe(&sys_access_kp)) < 0)    
-    {
-        printk("rkb: sys_access register_probe returned %d\n", ret);
-        printk("rkb: failing back to do_faccessat\n");
-        // try do_faccessat instead which (version specific we might need) 
-        sys_access_kp.symbol_name             = "do_faccessat";
-        sys_access_kp.pre_handler             = faccessat_pre_handler;
-        if((ret = register_kprobe(&sys_access_kp)) < 0)
-        {
-            pr_err("rkb: do_faccessat register_kprobe returned %d\n", ret);
-            return ret;
-        }
-    }
-
     return 0;
 }
 
@@ -396,7 +328,6 @@ void cleanup_module(void)
     unregister_kprobe(&kallsyms_kp);
     unregister_kprobe(&kallsyms_on_each_symbol_kp);
     unregister_kprobe(&lookup_address_kp);
-    unregister_kprobe(&sys_access_kp);
 
     if (kallsyms_cback_kp.addr != 0)
     {
