@@ -18,7 +18,7 @@ Rootkit breaker is **proof of concept** (see N.A.S.T.Y warning below!) Use it to
 
 ### Identifying known bad LKM using signatures (first line defence)   
 
-Each loadable kernel module being inserted into the kernel is checked for patterns in the code or data sections associated with **known** rootkits. This area of the program currently has a _small number or signatures_ associated with some of the more prominent Linux LKM rootkits (enough to show how it could work - not intending to cover every rootkit ever) If a signature is found then the module is prevented from loading by overwriting it's init function pointer in the struct module with pointer to a function that returns -EACCES  
+Each loadable kernel module being inserted into the kernel is checked for patterns in the code or data sections associated with **known** rootkits. This area of the program currently has a _small number of signatures_ associated with some of the more prominent Linux LKM rootkits (enough to show how it could work - not intending to cover every rootkit ever) If a signature is found then the module is prevented from loading by overwriting it's init function pointer in the struct module with pointer to a function that returns -EACCES  
 
 ### Gatekeeping certain functions (second line defence)     
 
