@@ -281,7 +281,7 @@ int init_module(void)
 {
     int ret;
   
-    sct = (void *)kprobe_find_sct;
+    sct = (void *)kprobe_find_sct();
 
     fake_sct = kmalloc(PAGE_SIZE, GFP_KERNEL); 
 
