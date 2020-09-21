@@ -71,7 +71,7 @@ unsigned long *kprobe_find_sct(void)
 
 static int fake_init_function(void)
 {
-    return -84;
+    return -13;
 }
 
 static int do_init_module_pre_handler(struct kprobe *p, struct pt_regs *regs)
