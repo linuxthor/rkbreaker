@@ -205,8 +205,8 @@ static int kallsyms_cback_func_pre_handler(struct kprobe *p, struct pt_regs *reg
         }
 
         // These two for the kmatryoshka loader.. 
-        if((strcmp(symsym, "SYS_INIT_MODULE") == 0) || 
-           (strcmp(symsym, "__DO_SYS_INIT_MODULE") == 0))
+        if((strcmp(symsym, "sys_init_module") == 0) || 
+           (strcmp(symsym, "__do_sys_init_module") == 0))
         {
             printk("rkb: kallsyms_on_each_symbol (init_module) scrubbing\n");
             regs->cx = 0; 
